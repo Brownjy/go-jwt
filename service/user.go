@@ -3,6 +3,7 @@ package service
 import (
 	"fmt"
 	"github.com/go-jwt/model"
+	"github.com/go-jwt/utils"
 )
 
 type UseService struct {
@@ -33,4 +34,25 @@ func (service *UseService) Register() {
 		return
 	}
 	fmt.Println("创建用户成功")
+}
+func (service *UseService) Login() {
+	var user model.User
+	// 查找User
+	_, err := user.GetUser(service.UserName)
+	if err != nil {
+		fmt.Println("没有该用户, err:", err)
+		return
+	}
+	// 解析该用户的密码
+	if !user.CheckPassword(service.Password) {
+		fmt.Println("解析密码失败, err: ", err)
+		return
+	}
+	// 创建用户Token
+	token, err := utils.GenerateToken(user)
+	if err != nil {
+		fmt.Println("创建Token失败, err: ", err)
+		return
+	}
+	fmt.Println("token: ", token)
 }

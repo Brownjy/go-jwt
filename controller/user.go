@@ -8,9 +8,15 @@ import (
 )
 
 // UserLogin 用户登录
-//func UserLogin(c *gin.Context) {
-//
-//}
+func UserLogin(c *gin.Context) {
+	var userRegisterService service.UseService
+	err := c.ShouldBind(&userRegisterService)
+	if err != nil {
+		fmt.Println("参数绑定失败！,err: ", err)
+		return
+	}
+	userRegisterService.Login()
+}
 
 // UserRegister 用户注册
 func UserRegister(c *gin.Context) {
@@ -26,5 +32,7 @@ func UserRegister(c *gin.Context) {
 
 // UserSayHello 用户SayHello
 func UserSayHello(c *gin.Context) {
-	c.String(http.StatusOK, "hello "+c.GetString("user"))
+	c.JSON(http.StatusOK, gin.H{
+		"msg": "hello " + c.GetString("user"),
+	})
 }
